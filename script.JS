@@ -1,4 +1,4 @@
-document.getElementById("LoginForm").addEventListener("submit", function(event) {
+document.getElementById("loginForm").addEventListener("submit", function(event) {
     event.preventDefault(); //Evita recargar la pagina
 
     const username = document.getElementById("username").value;
