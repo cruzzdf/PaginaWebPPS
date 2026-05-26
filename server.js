@@ -12,7 +12,7 @@ app.use(express.static('.'));  // Sirve tus archivos HTML/CSS/JS
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',         // tu usuario MySQL
-  password: '',         // tu contraseña MySQL
+  password: 'admin',         // tu contraseña MySQL
   database: 'login_db'
 });
 
@@ -61,6 +61,8 @@ app.post('/register', async (req, res) => {
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
+  console.log('Intentando login con usuario:', username); // ← debug
+
   if (!username || !password)
     return res.json({ success: false, message: 'Campos requeridos' });
 
@@ -68,10 +70,15 @@ app.post('/login', (req, res) => {
     'SELECT * FROM usuarios WHERE username = ?',
     [username],
     async (err, results) => {
+      console.log('Resultado query:', results); // ← debug
+      console.log('Error query:', err);         // ← debug
+
       if (err || results.length === 0)
         return res.json({ success: false, message: '❌ Usuario o contraseña incorrectos' });
 
       const match = await bcrypt.compare(password, results[0].password);
+      console.log('¿Contraseña coincide?:', match); // ← debug
+
       if (match) {
         res.json({ success: true, message: '✅ Ingreso exitoso. ¡Bienvenido!' });
       } else {
